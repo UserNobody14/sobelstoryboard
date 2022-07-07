@@ -1,7 +1,3 @@
-from pprint import pprint
-
-from lambda_function import lambda_handler
-
 from parse_fountain import ElemTypes, Fountain, FountainElement
 
 example_fountain = "/home/benjamin/CodeProjects/Python Stuff/fountain_to_dalle/examples/short_example.fountain"
@@ -20,6 +16,17 @@ class ProcessedAction:
         self.is_dual_dialogue = input_action.is_dual_dialogue
         self.original_line = input_action.original_line
         self.original_content = input_action.original_content
+        
+   
+    def get_map_out(self):
+        return {
+            'type': 'Action',
+            'text': self.get_line(),
+            'scene': self.scene_number,
+        }
+        
+    def get_line(self):
+        return '{}'.format(self.element_text)
 
     def __repr__(self):
         return '{}'.format(self.element_type) + ': ' + self.element_text
@@ -38,12 +45,23 @@ class ProcessedLine:
         self.input_speaker = input_speaker
         self.input_line = input_line
         # self.section_depth = section_depth
-        # self.scene_number = scene_number
+        self.scene_number = input_line.scene_number
         # self.scene_abbreviation = scene_abbreviation
         # self.is_centered = is_centered
         # self.is_dual_dialogue = is_dual_dialogue
         # self.original_line = original_line
         # self.original_content = original_content
+    
+    def get_map_out(self):
+        return {
+            'type': 'Dialogue',
+            'text': self.get_line(),
+            'scene': self.scene_number,
+            'speaker': self.speaker,
+        }
+
+    def get_line(self):
+        return '{} says "{}"'.format(self.speaker, self.element_text)
 
     def __repr__(self):
         return '{} says "{}"'.format(self.speaker, self.element_text)
@@ -69,8 +87,9 @@ def process_example(inpath):
     for itemi in process_elems(elems):
         print(itemi)
 
-lbody = "EXT. FESTIVAL #1#\r\n\r\n[[ 2019-01-25 - Benjamin Sobel: Consider adding him giving to the homeless briefly? To set up his kindness?]]\r\n\r\nOpen on a scene of a major festival going down the street of a medieval styled town. The crowds swarm the sidewalks while wagons parade down the street.\r\n\r\nOn some of the wagons there are town soldiers adorned with garlands of flowers.\r\n\r\nOn other wagons there are the heads of several great beasts.\r\n\r\nAt the front of the parade is a wagon with the head of a great dragon, With a town soldiers arm still sticking out of its mouth.\r\n\r\nThere is also a wagon with a banner calling it \"the swamp beast\"\r\n\r\nAmidst all of this a young man is running through the crowd\r\n\r\nJAMES\r\nComing through! Excuse me!"
 
-retv = lambda_handler({ 'body': lbody }, None)
-pprint(retv)
-#process_example(example_fountain)
+def yield_elems_from_string(instring):
+    out_items = Fountain(instring, None)
+    elems = out_items.elements
+    return process_elems(elems)
+        
