@@ -1,6 +1,4 @@
-
 from enum import Enum, auto
-
 
 COMMON_TRANSITIONS = {'FADE OUT.', 'CUT TO BLACK.', 'FADE TO BLACK.'}
 UPPER_ALPHABETS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ()\''
@@ -24,16 +22,16 @@ class ElemTypes(Enum):
 
 class FountainElement:
     def __init__(
-        self,
-        element_type,
-        element_text='',
-        section_depth=0,
-        scene_number='',
-        is_centered=False,
-        is_dual_dialogue=False,
-        original_line=0,
-        scene_abbreviation='.',
-        original_content=''
+            self,
+            element_type,
+            element_text='',
+            section_depth=0,
+            scene_number='',
+            is_centered=False,
+            is_dual_dialogue=False,
+            original_line=0,
+            scene_abbreviation='.',
+            original_content=''
     ):
         self.element_type = element_type
         self.element_text = element_text
@@ -76,7 +74,7 @@ class Fountain:
             self._parse_head(contents.splitlines())
         else:
             self._parse_body(contents.splitlines())
-    
+
     def __repr__(self):
         return '\n'.join(['{}'.format(a) for a in self.elements])
 
@@ -177,9 +175,9 @@ class Fountain:
                 continue
 
             if (
-                newlines_before > 0
-                and full_strip.startswith('[[')
-                and full_strip.endswith(']]')
+                    newlines_before > 0
+                    and full_strip.startswith('[[')
+                    and full_strip.endswith(']]')
             ):
                 self.elements.append(
                     FountainElement(
@@ -209,14 +207,14 @@ class Fountain:
                 newlines_before = 0
                 if full_strip[-1] == '#' and full_strip.count('#') > 1:
                     scene_number_start = len(full_strip) - \
-                        full_strip[::-1].find('#', 1) - 1
+                                         full_strip[::-1].find('#', 1) - 1
                     self.elements.append(
                         FountainElement(
                             ElemTypes.SceneHeading,
                             full_strip[1:scene_number_start].strip(),
                             scene_number=full_strip[
-                                scene_number_start:
-                            ].strip('#').strip(),
+                                         scene_number_start:
+                                         ].strip('#').strip(),
                             original_line=linenum,
                             original_content=line
                         )
@@ -233,25 +231,25 @@ class Fountain:
                 continue
 
             if (
-                line[0:4].upper() in
-                ['INT ', 'INT.', 'EXT ', 'EXT.', 'EST ', 'EST.', 'I/E ', 'I/E.']
-                or line[0:8].upper() in ['INT/EXT ', 'INT/EXT.']
-                or line[0:9].upper() in ['INT./EXT ', 'INT./EXT.']
+                    line[0:4].upper() in
+                    ['INT ', 'INT.', 'EXT ', 'EXT.', 'EST ', 'EST.', 'I/E ', 'I/E.']
+                    or line[0:8].upper() in ['INT/EXT ', 'INT/EXT.']
+                    or line[0:9].upper() in ['INT./EXT ', 'INT./EXT.']
             ):
                 newlines_before = 0
                 scene_name_start = line.find(line.split()[1])
                 if full_strip[-1] == '#' and full_strip.count('#') > 1:
                     scene_number_start = len(full_strip) - \
-                        full_strip[::-1].find('#', 1) - 1
+                                         full_strip[::-1].find('#', 1) - 1
                     self.elements.append(
                         FountainElement(
                             ElemTypes.SceneHeading,
                             full_strip[
-                                scene_name_start:scene_number_start
+                            scene_name_start:scene_number_start
                             ].strip(),
                             scene_number=full_strip[
-                                scene_number_start:
-                            ].strip('#').strip(),
+                                         scene_number_start:
+                                         ].strip('#').strip(),
                             original_line=linenum,
                             scene_abbreviation=line.split()[0],
                             original_content=line
@@ -317,12 +315,12 @@ class Fountain:
                 continue
 
             if (
-                newlines_before > 0
-                and index + 1 < len(script_body)
-                and script_body[index + 1]
-                and not line[0] in ['[', ']', ',', '(', ')']
-                and (all([(c in UPPER_ALPHABETS) for c in full_strip])
-                     or full_strip[0] == '@')
+                    newlines_before > 0
+                    and index + 1 < len(script_body)
+                    and script_body[index + 1]
+                    and not line[0] in ['[', ']', ',', '(', ')']
+                    and (all([(c in UPPER_ALPHABETS) for c in full_strip])
+                         or full_strip[0] == '@')
             ):
                 newlines_before = 0
                 if full_strip[-1] == '^':
@@ -392,5 +390,3 @@ class Fountain:
                     )
                 )
                 newlines_before = 0
-    
-    
