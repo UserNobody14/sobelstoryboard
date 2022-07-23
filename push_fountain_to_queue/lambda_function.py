@@ -9,6 +9,10 @@ def lambda_handler(event, context):
     inbody = event['body']
     json_elems = []
 
+    qparams = event['queryStringParameters']
+    dryrun = qparams['dryrun']
+    print(dryrun)
+    print(qparams)
     # now = datetime.now()
     # current_time = now.strftime("%H:%M:%S %p")
     unique_number = '{}'.format(uuid.uuid4())
@@ -20,6 +24,7 @@ def lambda_handler(event, context):
         map_data = elem_item.get_map_out()
         new_map_data = {
             'text': map_data['text'],
+            'dry_run': dryrun == 'yes',
             'number_of_items': 1,
             'unique_number': unique_number,
             'scene_number': map_data['scene'],
