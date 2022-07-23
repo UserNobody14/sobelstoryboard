@@ -15,6 +15,9 @@ export function pushFountainPy(
         pushFountainLambdaUrl,
         fountainText,
         {
+            params: {
+                dryrun: "yes"
+            },
             headers: {
                 'Content-Type': 'text/plain'
             }

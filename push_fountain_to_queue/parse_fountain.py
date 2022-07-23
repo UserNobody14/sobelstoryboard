@@ -390,3 +390,4 @@ class Fountain:
                     )
                 )
                 newlines_before = 0
+
